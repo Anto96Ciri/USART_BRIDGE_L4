@@ -34,9 +34,13 @@ typedef unsigned short      U16;        /* 2byte senza segno */
 #define S_SOH	  			0x01	//Record beginning identifier
 #define S_EOT				0x04	//Communication session end identifier
 #define S_LF				0x0A	//Record end identifier
-#define MAX_LEN_RX 			2		//Numero massimo di caratteri del messaggio msgRx
+#define MAX_LEN_RX 			1		//Numero massimo di caratteri del messaggio msgRx
 #define MAX_LEN_TX			21
 #define MAX_LENGTH_BUFFER	21
+
+#define ENDLINE				0		//FINE STRINGA DI TEST
+#define NEWLINE				1		//AGGIORNAMENTO PER TRASMISSIONE "\n"
+
 
 //UART
 #define TX_IS_READY 		(!tx_busy)							/*Si può trasmettere un dato*/

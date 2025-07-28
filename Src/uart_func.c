@@ -38,26 +38,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if (huart == &huart1) 															//RICEZIONE DA PC
 	{
 		//HAL_GPIO_TogglePin(LED_BLUE_GPIO_Port, LED_BLUE_Pin);
-		//Salvo il byte ricevuto in un buffer e pulisco il byte ricevuto
-		//Rx_data[i_rx] 		= Rx_Byte[0];										//riempio il buffer
-
 		Tx_buffer[i_buf] 	= Rx_Byte[0]; 											//salvo nel buffer di trasmissione nella posizione corrente
 		Rx_Byte[0] 			= 0; 													//pulizia del byte letto
-
 		//Aggiornamento
-//		if( i_rx < (MAX_LEN_RX-1) )	{i_rx +=1;}
-//		else {i_rx = 0;} 															//fine ricezione
-
-		//Aggiornamento
-		if( i_buf < (MAX_LEN_TX-1) )
-		{
-			i_buf +=1;
-		}
+		if( i_buf < (MAX_LENGTH_BUFFER-1) ){i_buf +=1;}
 		else {i_buf = 0;}
-
 		UartReady = SET;															//set transmission flag: transfer complete
+
 	}
 }
+
 //UART - CALLBACK
 /*
  * Quando la trasmissione è completata, si entra nella callback
@@ -67,12 +57,22 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart == &huart2)
 	{
-		if (++i_tx >= MAX_LEN_TX)
+		switch (STATE)
 		{
-			i_tx = 0;
+			case ENDLINE: // Fine linea di Test
+				if (++i_tx >= MAX_LENGTH_BUFFER)
+				{
+					i_tx = 0;
+					STATE = NEWLINE;														// il ciclo dopo non devo incrementare i_tx!
+					HAL_UART_Transmit_IT(&huart2, (uint8_t*)"\n", 1);						//trasmetto a capo
+				}
+			break;
+
+			case NEWLINE: // Aggiornamento NEWLINE "\n"
+				STATE = ENDLINE;
+				i_tx = 0;
+			break;
 		}
-
 		tx_busy = 0; 																//trasmissione finita → pronto per prossimo byte
-
 	}
 }
