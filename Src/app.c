@@ -35,10 +35,10 @@ void App_RunCycle(void)
 		tx_busy = 1;
 
 		//Controllo Sequenza di Test
-		if( Tx_buffer[i_tx] == attesa[index_atteso] ){index_atteso += 1;}
-		else
-		{
-			printf("errato");
-		}
+//		if( Tx_buffer[i_tx] == attesa[index_atteso] ){index_atteso += 1;}
+//		else
+//		{
+//			printf("errato");
+//		}
 	}
 }
